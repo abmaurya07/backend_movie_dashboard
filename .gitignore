@@ -1,0 +1,53 @@
+# Python
+*.py[cod]
+*.pyo
+*.pyd
+__pycache__/
+*.db
+*.sqlite3
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+*.env
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# MySQL
+*.sql
+
+# Test and coverage files
+.coverage
+*.coveragerc
+nosetests.xml
+coverage.xml
+*.log
+
+# Flask
+instance/
+.webassets-cache
+
+# Pytest
+.cache/
