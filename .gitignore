@@ -3,51 +3,98 @@
 *.pyo
 *.pyd
 __pycache__/
-*.db
-*.sqlite3
+*.so
 
 # Django
 *.log
+*.pot
+*.pyc
 local_settings.py
 db.sqlite3
+db.sqlite3-journal
 media/
+staticfiles/
 
-# Virtual Environment
+# Environment
+.env
+.env.*
+!.env.example
+.venv
+env/
 venv/
 ENV/
-env/
-*.env
 
-# IDEs and Editors
-.vscode/
+# IDE
 .idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
 *.sublime-workspace
 *.sublime-project
 
-# OS Files
+# OS
 .DS_Store
 Thumbs.db
+*.db
+desktop.ini
 
-# Python egg files
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
-
-# MySQL
-*.sql
-
-# Test and coverage files
+# Project specific
+/movies.csv
+/data/
 .coverage
-*.coveragerc
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
 nosetests.xml
 coverage.xml
-*.log
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
-# Flask
-instance/
-.webassets-cache
+# Celery
+celerybeat-schedule
+celerybeat.pid
 
-# Pytest
-.cache/
+# Local development settings
+/config/settings/local.py
+*.local.py

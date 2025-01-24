@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     year = models.IntegerField()
@@ -22,4 +20,4 @@ class Movie(models.Model):
             models.Index(fields=['rating']),
             models.Index(fields=['votes']),
             models.Index(fields=['gross']),
-        ]
+        ] 
