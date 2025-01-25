@@ -3,12 +3,16 @@ Base settings for movie_dashboard project.
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-n+d*%acsyx!&r1i1%=3o%80e0orz1j=x(w#_*p2a+08ruws5_l'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-n+d*%acsyx!&r1i1%=3o%80e0orz1j=x(w#_*p2a+08ruws5_l')
 
 # Application definition
 INSTALLED_APPS = [

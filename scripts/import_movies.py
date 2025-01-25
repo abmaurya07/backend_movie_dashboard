@@ -1,6 +1,11 @@
 import os
+import sys
 import django
 import pandas as pd
+
+# Add the project root directory to Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root)
 
 # Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
@@ -27,6 +32,16 @@ def import_movies(csv_path='movies.csv'):
         
         for _, row in df.iterrows():
             try:
+                # Clean the votes value and default to 0 if None
+                votes_value = clean_votes(row['VOTES'])
+                if votes_value is None:
+                    votes_value = 0
+                    
+                # Clean the runtime value and default to 0 if None
+                runtime_value = clean_runtime(row['RunTime'])
+                if runtime_value is None:
+                    runtime_value = 0
+                    
                 movie = Movie(
                     title=str(row['MOVIES']) if not pd.isna(row['MOVIES']) else 'Unknown',
                     year=clean_year(row['YEAR']),
@@ -34,8 +49,8 @@ def import_movies(csv_path='movies.csv'):
                     rating=clean_rating(row['RATING']),
                     one_line=str(row['ONE-LINE']) if not pd.isna(row['ONE-LINE']) else '',
                     stars=str(row['STARS']) if not pd.isna(row['STARS']) else '',
-                    votes=clean_votes(row['VOTES']),
-                    runtime=clean_runtime(row['RunTime']),
+                    votes=votes_value,
+                    runtime=runtime_value,
                     gross=clean_gross(row['Gross'])
                 )
                 movies_to_create.append(movie)

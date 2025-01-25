@@ -1,3 +1,9 @@
+"""
+Movie API Views Module - Provides REST API endpoints for movie-related operations.
+This module contains view classes that handle HTTP requests and responses for the movie API.
+Each view is responsible for a specific aspect of movie data retrieval and processing.
+"""
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -5,7 +11,21 @@ from apps.movies.services.movie_service import MovieService
 from apps.movies.api.v1.serializers import MovieSerializer
 
 class TopMoviesByGrossView(APIView):
+    """
+    API endpoint that retrieves top movies by gross earnings.
+    
+    GET /api/v1/movies/top-by-gross/
+    
+    Query Parameters:
+        year (int, optional): Filter results by specific year
+        
+    Returns:
+        200: List of movies ordered by gross earnings
+        400: Bad request if year parameter is invalid
+    """
+    
     def get(self, request):
+        """Handle GET request for top movies by gross earnings."""
         year = request.query_params.get('year')
         try:
             if year:
@@ -20,13 +40,38 @@ class TopMoviesByGrossView(APIView):
             )
 
 class TopMoviesByVotesView(APIView):
+    """
+    API endpoint that retrieves top movies by number of votes.
+    
+    GET /api/v1/movies/top-by-votes/
+    
+    Returns:
+        200: List of movies ordered by vote count
+    """
+    
     def get(self, request):
+        """Handle GET request for top movies by votes."""
         movies = MovieService.get_top_movies_by_votes()
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
 
 class TopMoviesByRatingView(APIView):
+    """
+    API endpoint that retrieves top-rated movies with optional filters.
+    
+    GET /api/v1/movies/top-by-rating/
+    
+    Query Parameters:
+        year (int, optional): Filter results by specific year
+        min_votes (int, optional): Minimum number of votes required (default: 1000)
+        
+    Returns:
+        200: List of movies ordered by rating
+        400: Bad request if parameters are invalid
+    """
+    
     def get(self, request):
+        """Handle GET request for top movies by rating."""
         year = request.query_params.get('year')
         min_votes = request.query_params.get('min_votes', 1000)
         
@@ -47,12 +92,29 @@ class TopMoviesByRatingView(APIView):
             )
 
 class MovieYearStatsView(APIView):
+    """
+    API endpoint that provides statistical analysis of movies by year.
+    
+    GET /api/v1/movies/year-stats/
+    
+    Query Parameters:
+        start_year (int, optional): Start year for analysis
+        end_year (int, optional): End year for analysis
+        min_movies (int, optional): Minimum number of movies per year (default: 1)
+        
+    Returns:
+        200: List of yearly statistics including total movies and average rating
+        400: Bad request if parameters are invalid
+    """
+    
     def get(self, request):
+        """Handle GET request for movie statistics by year."""
         start_year = request.query_params.get('start_year')
         end_year = request.query_params.get('end_year')
         min_movies = request.query_params.get('min_movies', 1)
 
         try:
+            # Convert string parameters to integers
             if start_year:
                 start_year = int(start_year)
             if end_year:
@@ -65,6 +127,7 @@ class MovieYearStatsView(APIView):
                 min_movies=min_movies
             )
             
+            # Format the response data
             data = [{
                 'year': stat['year'],
                 'total_movies': stat['total_movies'],
