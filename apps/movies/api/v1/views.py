@@ -131,7 +131,8 @@ class MovieYearStatsView(APIView):
             data = [{
                 'year': stat['year'],
                 'total_movies': stat['total_movies'],
-                'average_rating': round(stat['average_rating'], 2) if stat['average_rating'] else None
+                'average_rating': round(stat['average_rating'], 2) if stat['average_rating'] else None,
+                'average_gross': round(stat['average_gross'], 2) if stat['average_gross'] else None
             } for stat in stats]
             
             return Response(data)

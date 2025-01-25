@@ -86,5 +86,6 @@ class MovieService:
 
         return queryset.annotate(
             total_movies=Count('id'),
-            average_rating=Avg('rating')
+            average_rating=Avg('rating'),
+            average_gross=Avg('gross')
         ).filter(total_movies__gte=min_movies).order_by('year') 
