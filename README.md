@@ -13,17 +13,17 @@ A robust REST API backend for managing and analyzing movie data. Built with Djan
 
 ## Tech Stack
 
-- Python 3.x
+- Python 3.11
 - Django REST Framework
-- PostgreSQL
+- PostgreSQL 13
 - JWT Authentication
-- Docker support
+- Docker & Docker Compose
 
 ## Prerequisites
 
-- Python 3.x
-- PostgreSQL 12+
-- Docker (optional)
+- Python 3.11+
+- PostgreSQL 13+
+- Docker and Docker Compose (recommended)
 
 ## Installation
 
@@ -33,43 +33,62 @@ git clone <repository-url>
 cd backend_movie_dashboard
 ```
 
-2. Create and activate a virtual environment:
+### Using Docker (Recommended)
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Build and start the containers:
+```bash
+cd docker
+docker-compose up --build
+```
+
+The application will be available at `http://localhost:8000`
+
+### Manual Setup (Alternative)
+
+1. Create and activate a virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install dependencies:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
+3. Set up environment variables:
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
+# Make sure POSTGRES_HOST=localhost for local development
 ```
 
-5. Create PostgreSQL database:
+4. Create PostgreSQL database:
 ```bash
 createdb movie_dashboard
 ```
 
-6. Run database migrations:
+5. Run database migrations:
 ```bash
-python manage.py migrate
+python server.py migrate
 ```
 
 ## Running the Application
 
-### Development Server
+### Using Docker
 ```bash
-python manage.py runserver
+cd docker
+docker-compose up
 ```
 
-### Docker
+### Local Development Server
 ```bash
-docker-compose up --build
+python server.py runserver
 ```
 
 ### Utility Scripts
@@ -78,10 +97,10 @@ docker-compose up --build
 The project includes a utility script to import movie data from a CSV file into the database.
 
 ```bash
-# Import movies from the default movies.csv file in the root directory
-python scripts/import_movies.py
+# With Docker:
+docker-compose exec web python scripts/import_movies.py
 
-# Import movies from a custom CSV file
+# Without Docker:
 python scripts/import_movies.py path/to/your/movies.csv
 ```
 
@@ -90,8 +109,6 @@ The script performs the following operations:
 - Cleans and validates data (gross earnings, year, rating, votes, runtime)
 - Removes existing movies to avoid duplicates
 - Bulk imports the cleaned movie data into the database
-
-**Note**: Ensure your virtual environment is activated and all dependencies are installed before running the script.
 
 ## API Endpoints
 
@@ -125,8 +142,13 @@ The application includes robust data cleaning utilities for:
 ## Testing
 
 Run the test suite:
+
 ```bash
-python manage.py test
+# With Docker:
+docker-compose exec web python server.py test
+
+# Without Docker:
+python server.py test
 ```
 
 ## Project Structure
@@ -142,8 +164,23 @@ backend_movie_dashboard/
 │       └── utils/
 ├── config/
 ├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
 ├── requirements/
 └── scripts/
+```
+
+## Environment Variables
+
+Key environment variables in `.env`:
+```
+DEBUG=True
+SECRET_KEY=your-secret-key
+POSTGRES_DB=movie_dashboard
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_HOST=db  # Use 'db' for Docker, 'localhost' for local development
+POSTGRES_PORT=5432
 ```
 
 ## License
