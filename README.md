@@ -16,7 +16,7 @@ This document provides detailed instructions for common tasks and troubleshootin
 
 1. Clone and setup the project:
 ```bash
-git clone <repository-url>
+git clone https://github.com/abmaurya07/backend_movie_dashboard.git
 cd backend_movie_dashboard
 cp .env.example .env
 ```
