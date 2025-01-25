@@ -6,6 +6,8 @@ and normalization for various movie attributes like gross earnings, year, rating
 
 from decimal import Decimal
 import pandas as pd
+import decimal
+
 
 def clean_gross(value):
     """
@@ -29,19 +31,27 @@ def clean_gross(value):
         >>> clean_gross('500K')   # Returns Decimal('500000')
         >>> clean_gross('NA')     # Returns None
     """
-    if pd.isna(value) or not value or value == 'NA':
+    print(f"Processing gross value: {value}, type: {type(value)}")
+    
+    # Convert float NaN to None
+    if isinstance(value, float) and pd.isna(value):
+        print("Value is NaN float")
+        return None
+        
+    # Handle empty strings and 'NA'
+    if not value or value == 'NA':
+        print("Value is empty or NA")
         return None
         
     try:
-        # Convert to string if not already
+        # If value is not a string, try to convert it
         if not isinstance(value, str):
             value = str(value)
             
-        # Remove currency symbols and separators
+        # Remove $ and commas, handle M/K suffixes
         cleaned = value.replace('$', '').replace(',', '')
         multiplier = 1
         
-        # Handle suffixes and convert to full numbers
         if cleaned.endswith('M'):
             multiplier = 1000000
             cleaned = cleaned[:-1]
@@ -49,9 +59,15 @@ def clean_gross(value):
             multiplier = 1000
             cleaned = cleaned[:-1]
             
+        # Convert to float and apply multiplier
         float_val = float(cleaned) * multiplier
-        return Decimal(str(float_val))
-    except (ValueError, TypeError) as e:
+        
+        # Convert to Decimal for precision
+        decimal_val = Decimal(str(float_val))
+        print(f"Final decimal value: {decimal_val}")
+        return decimal_val
+    except (ValueError, TypeError, decimal.ConversionSyntax) as e:
+        print(f"Error processing value: {e}")
         return None
 
 def clean_year(value):
@@ -70,8 +86,12 @@ def clean_year(value):
         >>> clean_year(2019.0)  # Returns 2019
         >>> clean_year('NA')    # Returns None
     """
+    if pd.isna(value) or value == '' or value == 'NA':
+        return None
     try:
-        return int(value)
+        year = int(float(str(value)))
+        # Basic validation for reasonable year range
+        return year if 1900 <= year <= 2025 else None
     except (ValueError, TypeError):
         return None
 
@@ -91,10 +111,14 @@ def clean_rating(value):
         >>> clean_rating(7)      # Returns 7.0
         >>> clean_rating('NA')   # Returns None
     """
+    if pd.isna(value) or value == '' or value == 'NA':
+        return 0.0
     try:
-        return float(value)
+        rating = float(str(value))
+        # Basic validation for IMDb rating range (0-10)
+        return rating if 0 <= rating <= 10 else 0.0
     except (ValueError, TypeError):
-        return None
+        return 0.0
 
 def clean_votes(value):
     """
@@ -112,10 +136,14 @@ def clean_votes(value):
         >>> clean_votes(500.0)   # Returns 500
         >>> clean_votes('NA')    # Returns None
     """
+    if pd.isna(value) or value == '' or value == 'NA':
+        return 0
     try:
-        return int(value)
+        # Remove any non-numeric characters except digits
+        cleaned = ''.join(c for c in str(value) if c.isdigit())
+        return int(cleaned) if cleaned else 0
     except (ValueError, TypeError):
-        return None
+        return 0
 
 def clean_runtime(value):
     """
@@ -133,7 +161,9 @@ def clean_runtime(value):
         >>> clean_runtime(90.5)   # Returns 90
         >>> clean_runtime('NA')   # Returns None
     """
+    if pd.isna(value) or value == '' or value == 'NA':
+        return 0
     try:
-        return int(value)
+        return int(float(str(value)))
     except (ValueError, TypeError):
-        return None 
+        return 0

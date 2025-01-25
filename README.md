@@ -72,6 +72,27 @@ python manage.py runserver
 docker-compose up --build
 ```
 
+### Utility Scripts
+
+#### Import Movies Script
+The project includes a utility script to import movie data from a CSV file into the database.
+
+```bash
+# Import movies from the default movies.csv file in the root directory
+python scripts/import_movies.py
+
+# Import movies from a custom CSV file
+python scripts/import_movies.py path/to/your/movies.csv
+```
+
+The script performs the following operations:
+- Reads movie data from a CSV file
+- Cleans and validates data (gross earnings, year, rating, votes, runtime)
+- Removes existing movies to avoid duplicates
+- Bulk imports the cleaned movie data into the database
+
+**Note**: Ensure your virtual environment is activated and all dependencies are installed before running the script.
+
 ## API Endpoints
 
 ### REST API
