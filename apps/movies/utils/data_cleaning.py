@@ -31,16 +31,16 @@ def clean_gross(value):
         >>> clean_gross('500K')   # Returns Decimal('500000')
         >>> clean_gross('NA')     # Returns None
     """
-    print(f"Processing gross value: {value}, type: {type(value)}")
+    # print(f"Processing gross value: {value}, type: {type(value)}")
     
     # Convert float NaN to None
     if isinstance(value, float) and pd.isna(value):
-        print("Value is NaN float")
+        # print("Value is NaN float")
         return None
         
     # Handle empty strings and 'NA'
     if not value or value == 'NA':
-        print("Value is empty or NA")
+        # print("Value is empty or NA")
         return None
         
     try:
@@ -64,10 +64,10 @@ def clean_gross(value):
         
         # Convert to Decimal for precision
         decimal_val = Decimal(str(float_val))
-        print(f"Final decimal value: {decimal_val}")
+        # print(f"Final decimal value: {decimal_val}")
         return decimal_val
     except (ValueError, TypeError, decimal.ConversionSyntax) as e:
-        print(f"Error processing value: {e}")
+        # print(f"Error processing value: {e}")
         return None
 
 def clean_year(value):

@@ -24,18 +24,50 @@ cp .env.example .env
 2. Start the Docker containers:
 ```bash
 cd docker
-docker-compose up --build
+docker-compose up --build -d
 ```
 
-3. Run initial migrations:
+3. Create and run initial migrations:
 ```bash
+# Create migrations for all apps
+docker-compose exec web python /app/server.py makemigrations
+# Create migrations specifically for movies app if needed
+docker-compose exec web python /app/server.py makemigrations movies
+
+# Apply migrations
 docker-compose exec web python /app/server.py migrate
 ```
 
-4. Import sample data (optional):
+4. Verify migrations status:
 ```bash
-docker-compose exec web python /app/scripts/import_movies.py
+docker-compose exec web python /app/server.py showmigrations
 ```
+
+5. Import sample data (optional):
+```bash
+docker-compose exec web python /app/scripts/import_movies.py /app/movies.csv
+```
+
+### Common Setup Issues
+
+1. "relation does not exist" error:
+   - This usually means migrations haven't been created or applied
+   - Follow steps 3-4 above to create and apply migrations
+   - Verify in database that tables are created:
+     ```bash
+     docker-compose exec db psql -U postgres movie_dashboard -c "\dt"
+     ```
+
+2. Migration issues:
+   - If migrations aren't detected:
+     ```bash
+     # Remove existing migrations (if needed)
+     docker-compose exec web rm -rf /app/apps/movies/migrations/0*.py
+     
+     # Recreate migrations
+     docker-compose exec web python /app/server.py makemigrations movies
+     docker-compose exec web python /app/server.py migrate
+     ```
 
 ### Local Development Setup
 
